@@ -1,0 +1,60 @@
+C comenzamos…
+C comenzamos…
+P 2048 1 ignora cualquier comentario en la misma línea del comando, como éste.
+Asignar 2048 bytes al proceso 1
+Se asignaron los marcos de página 0-127 al proceso 1
+//¡se llenó la memoria!
+// como es el primer proceso, se cargó en memoria contigua
+A 1 1 0
+Obtener la dirección real correspondiente a la dirección virtual 1 del proceso 1
+Dirección virtual: 1. Dirección real: 1
+// el proceso 1 comienza a ejecutar...
+A 33 1 1
+Obtener la dirección real correspondiente a la dirección virtual 33 del proceso 1
+y modificar dicha dirección
+Página 2 del proceso 1 modificada.
+Dirección virtual: 33. Dirección real: 33
+P 32 2
+Asignar 32 bytes al proceso 2
+página 5 del proceso 1 swappeada al marco 0 del área de swapping
+página 78 del proceso 1 swappeada al marco 1 del área de swapping
+// para hacer hueco y poder cargar el proceso 2 pues no había ningún marco libre.
+// 5 y 78 son dos números aleatorios de acuerdo a algoritmo de reemplazo
+// como el proceso 1 estaba en memoria contigua
+// empezando desde 0, los marcos de página obtenidos aleatoriamente coinciden
+// con los números de página del proceso
+Se asignaron los marcos de página [5, 78] al proceso 2
+- 9 -
+A 15 2 0
+Obtener la dirección real correspondiente a la dirección virtual 15 del proceso 2
+Dirección virtual:15. Dirección real: 95
+// es la página 0 del proceso 2, que se encuentra en el marco 5
+// Este empieza en la dirección 16*5 = 80.
+A 82 1 0
+Obtener la dirección real correspondiente a la dirección virtual 82 del proceso 1
+Página 80 del proceso 1 swappeada al marco 3 del área de swapping.
+Se localizó la página 5 del proceso 1 que estaba en la posición 0 de swapping
+y se cargó al marco 80.
+Dirección virtual: 82. Dirección real: 1282
+// Como no había espacio en M,
+// para cargar esa página 5 (82/16=5 y sobran 2) fué necesario antes sacar otra, y resultó
+// aleatoriamente que estaba en el marco 80. Ese marco 80 ya
+// estaba ocupado por otra página del mismo proceso 1 que fue necesario
+// swappear al marco 3 de S
+// Posición 0 del swapping queda libre y debe reutilizarse después si es necesario.
+L 2
+Liberar los marcos de página ocupados por el proceso 2
+Se liberan los marcos de página de memoria real: [5, 78]
+P 32 3522
+Asignar 32 bytes al proceso 35225
+Se asignan los marcos [5, 78]
+// pues justo los acabamos de librerar
+L 1
+Liberar los marcos de página ocupados por el proceso 1
+Se liberan los marcos de memoria real: 0-4, 6-77 y 79-127
+Se liberan los marcos [1,2] del área de swapping
+F
+Fin. Reporte 
+E
+F
+E
