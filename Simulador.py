@@ -12,7 +12,6 @@ if sys.argv[1]=='fifo':
     #funciones seria un archivo a parte con las funciones
     funciones.estrategia = True
 for instruccion in instruccionesParser:
-   #print("\n", ' '.join(str(s) for s in instruccion), sep="")
     if instruccion[0] == 'P':
         funciones.P(instruccion[1], instruccion[2])
     elif instruccion[0] == 'A':
