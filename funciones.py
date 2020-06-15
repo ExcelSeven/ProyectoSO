@@ -7,8 +7,6 @@ SWAP_SIZE = 4096
 
 nextswap_fifo=[]
 nextswap_lru=[]
-proc_pags = {}
-swapped_pags = {}
 swapping = [0] * SWAP_SIZE
 memory = [0] * MEMORY_SIZE
 swaps = fallosdepag = time = 0
