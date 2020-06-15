@@ -33,9 +33,8 @@ def chechForSpace(Memoria,Tamaño):
 
 #modifica la memoria para agregar un proceso con un tamaño desde una direccion inicial
 def ModMemoria(Memoria,Dir,Tamaño,process):
-    x = Dir
-    for x <= Tamaño:
-        Memoria[i] = process
+    for x in range(Dir,Tamaño+Dir):
+        Memoria[x] = process
     return
 
     
@@ -72,9 +71,9 @@ else:
         length = len(lista)
         Memoria = [-1] * 2048 # memoria real
         Swapping = [-1] * 4096 # memoria reservada para swapping
-        ProcessList = []
+        ProcessQueue = [] # fila de los procesos para saber cual entro primero siguendo FIFO
         #---------------------iniciamos simulador----------------------------
-        for i in range(length):
+        for i in range(length): 
             state = checkFirstValList(lista[i])
             if state == 'C':
                 print(printComment(lista[i]))
@@ -87,9 +86,10 @@ else:
                 Dir = chechForSpace(Memoria,bytesP) #dirrecion fisica inicial
                 if Dir != -1:
                     P = Process(Pnum,bytesP,Dir)
-                    ProcessList.append(P) # direccion de memoria libre
+                    ProcessQueue.append(P) # direccion de memoria libre
                     ModMemoria(Memoria,Dir,bytesP,Pnum)
                     print(Dir)
+                    
                 else:
                     if bytesP > 2048:
                         print('Demasiado grande para caber en memoria')
@@ -103,4 +103,4 @@ else:
             else:
                 print('E')
         
-        print(Memoria)
+        
