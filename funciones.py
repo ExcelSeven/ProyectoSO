@@ -72,7 +72,6 @@ def swap(new_process, new_page, next_frame):
 
     swapped_pags[prev_proc][prev_pag] = findSwap()
     del proc_pags[prev_proc][prev_pag]
-
     
     pageToFrame(new_process, new_page, next_frame)
     proc_pags[new_process][new_page] = next_frame
@@ -80,3 +79,6 @@ def swap(new_process, new_page, next_frame):
     time+= 2
     return True
 
+def E():
+    print ('Fin de instrucciones')
+    exit()
