@@ -58,27 +58,6 @@ def next():
 
 
 
-def swap(new_process, new_page, next_frame):
-    if findSwap()== -1:
-        return False
-    
-    global time
-    prev_proc, prev_pag = memory[next_frame]
-    print("La pagina ", prev_pag, " del proceso ", prev_proc, " ha sido swappeada al marco ", math.floor(findSwap()/PAGE_SIZE), " de swapping.")
-    pageToSwap(prev_proc, prev_pag, findSwap())
-
-    if prev_proc not in swapped_pags:
-        swapped_pags[prev_proc] = {}
-
-    swapped_pags[prev_proc][prev_pag] = findSwap()
-    del proc_pags[prev_proc][prev_pag]
-    
-    pageToFrame(new_process, new_page, next_frame)
-    proc_pags[new_process][new_page] = next_frame
-    
-    time+= 2
-    return True
-
 def E():
     print ('Fin de instrucciones')
     exit()
