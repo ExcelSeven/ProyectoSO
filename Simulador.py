@@ -1,7 +1,7 @@
 import sys
 import re
 import fnmatch
-
+import math
 #local libraries
 from ProcessData import Process
 
@@ -72,6 +72,7 @@ else:
         Memoria = [-1] * 2048 # memoria real
         Swapping = [-1] * 4096 # memoria reservada para swapping
         ProcessQueue = [] # fila de los procesos para saber cual entro primero siguendo FIFO
+        tablaDePagina = {}
         #---------------------iniciamos simulador----------------------------
         for i in range(length): 
             state = checkFirstValList(lista[i])
@@ -85,8 +86,11 @@ else:
                 bytesP = int(corte[1]) #tamaño
                 Dir = chechForSpace(Memoria,bytesP) #dirrecion fisica inicial
                 if Dir != -1:
-                    P = Process(Pnum,bytesP,Dir)
-                    ProcessQueue.append(P) # direccion de memoria libre
+                    tablaDePagina[Pnum] = Dir / 16 #guarda el marco de pagina 
+                    Despl = Dir - math.floor(Dir/16)*16 #sacar el despl
+                    P = Process(Pnum,bytesP,Despl)
+                    ProcessQueue.append(P) 
+                    
                     ModMemoria(Memoria,Dir,bytesP,Pnum)
                     print(Dir)
                     
@@ -103,4 +107,4 @@ else:
             else:
                 print('E')
         
-        
+        print(Memoria)
