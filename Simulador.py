@@ -2,6 +2,12 @@ import sys
 import re
 import fnmatch
 
+def checkFirstValList(X):
+    return X[0]
+def printComment(X):
+    return X[2:]
+        
+
 # sys.argv[] has the arguments from a python command line 
 pattern = re.compile(r'(.)*(.txt)')
 #regex para buscar los commandos
@@ -24,3 +30,22 @@ else:
         lista = parser.findall(data)
         #hace print de los comandos
         print(lista)
+        length = len(lista)
+        Memoria = [-1] * 2048
+        Swapping = [-1] * 4096
+        #iniciamos simulador
+        for i in range(length):
+            state = checkFirstValList(lista[i])
+            if state == 'C':
+                print(printComment(lista[i]))
+            elif state == 'F':
+                print('F')
+            elif state == 'P':
+                print('P')
+            elif state == 'A':
+                print('A')
+            elif state == 'L':
+                print('L')
+            else:
+                print('E')
+        
