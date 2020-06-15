@@ -50,7 +50,7 @@ def printComment(X):
 # sys.argv[] has the arguments from a python command line 
 pattern = re.compile(r'(.)*(.txt)')
 #regex para buscar los commandos
-parser = re.compile(r'P \d+ \d+|A \d+ \d+ \d|L \d+|C \w+|F[^A-Za-z]|E$')
+parser = re.compile(r'P\s+\d+\s+\d+|A\s+\d+\s+\d+\s+\d|L\s+\d+|C .+|F[^A-Za-z]|E$')
 if (len(sys.argv) != 2):
     print("argumentos incorrectos")
 else:
