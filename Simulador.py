@@ -2,6 +2,44 @@ import sys
 import re
 import fnmatch
 
+#local libraries
+from ProcessData import Process
+
+# revisa si existe un espacio disponible
+# si no existe regresa -1
+# si existe regra sa dirrecion inicial
+def chechForSpace(Memoria,Tamaño):
+    Contador = 0
+    Dir = -1
+    state = True # valor para saber si es la primera direccion
+    i = 0
+    length = len(Memoria)
+    for i in range(length):
+        if Memoria[i] == -1:
+            if Contador != Tamaño:
+                Contador = Contador + 1
+            if state :
+                Dir = i
+                state = False
+        else:
+            if Contador < Tamaño:
+                Contador = 0
+                state = True
+#revisamos si no se paso del tamaño o si hay espacio suficiente
+    if not(state) and Contador != Tamaño:
+        return -1
+    else:
+        return Dir
+
+#modifica la memoria para agregar un proceso con un tamaño desde una direccion inicial
+def ModMemoria(Memoria,Dir,Tamaño,process):
+    i = Dir
+    for i in range(Tamaño):
+        Memoria[i] = process
+    return
+
+    
+# fucniones auxiliares
 def checkFirstValList(X):
     return X[0]
 def printComment(X):
@@ -33,6 +71,8 @@ else:
         length = len(lista)
         Memoria = [-1] * 2048
         Swapping = [-1] * 4096
+        ProcessList = []
+        dict = {}
         #iniciamos simulador
         for i in range(length):
             state = checkFirstValList(lista[i])
@@ -41,7 +81,21 @@ else:
             elif state == 'F':
                 print('F')
             elif state == 'P':
-                print('P')
+                corte = lista[i].split()
+                Pnum = int(corte[2]) #numero de proceso
+                bytesP = int(corte[1]) #tamaño
+                Dir = chechForSpace(Memoria,bytesP) #dirrecion fisica inicial
+                if Dir != -1:
+                    P = Process(Pnum,bytesP,Dir)
+                    ProcessList.append(P) # direccion de memoria libre
+                    ModMemoria(Memoria,Dir,bytesP,Pnum)
+                    print(Dir)
+                else:
+                    if bytesP > 2048:
+                        print('Demasiado grande para caber en memoria')
+                    else:
+                        print('no hay espacio en memoria')
+                    
             elif state == 'A':
                 print('A')
             elif state == 'L':

@@ -1,6 +1,6 @@
 C comenzamos…
 C comenzamos…
-P 2048 1 ignora cualquier comentario en la misma línea del comando, como éste.
+P 2049 1 ignora cualquier comentario en la misma línea del comando, como éste.
 Asignar 2048 bytes al proceso 1
 Se asignaron los marcos de página 0-127 al proceso 1
 //¡se llenó la memoria!
