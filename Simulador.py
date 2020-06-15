@@ -33,8 +33,8 @@ def chechForSpace(Memoria,Tamaño):
 
 #modifica la memoria para agregar un proceso con un tamaño desde una direccion inicial
 def ModMemoria(Memoria,Dir,Tamaño,process):
-    i = Dir
-    for i in range(Tamaño):
+    x = Dir
+    for x <= Tamaño:
         Memoria[i] = process
     return
 
@@ -46,6 +46,7 @@ def printComment(X):
     return X[2:]
         
 
+#-------------------------------------------------Inicio------------------------------------------------------------------
 # sys.argv[] has the arguments from a python command line 
 pattern = re.compile(r'(.)*(.txt)')
 #regex para buscar los commandos
@@ -69,19 +70,18 @@ else:
         #hace print de los comandos
         print(lista)
         length = len(lista)
-        Memoria = [-1] * 2048
-        Swapping = [-1] * 4096
+        Memoria = [-1] * 2048 # memoria real
+        Swapping = [-1] * 4096 # memoria reservada para swapping
         ProcessList = []
-        dict = {}
-        #iniciamos simulador
+        #---------------------iniciamos simulador----------------------------
         for i in range(length):
             state = checkFirstValList(lista[i])
             if state == 'C':
                 print(printComment(lista[i]))
             elif state == 'F':
                 print('F')
-            elif state == 'P':
-                corte = lista[i].split()
+            elif state == 'P': #----- falta revisar que no exista un proceso igual
+                corte = lista[i].split() # separa en substrings
                 Pnum = int(corte[2]) #numero de proceso
                 bytesP = int(corte[1]) #tamaño
                 Dir = chechForSpace(Memoria,bytesP) #dirrecion fisica inicial
@@ -94,7 +94,7 @@ else:
                     if bytesP > 2048:
                         print('Demasiado grande para caber en memoria')
                     else:
-                        print('no hay espacio en memoria')
+                        print('no hay espacio en memoria') #Ejecutar LRU
                     
             elif state == 'A':
                 print('A')
@@ -103,3 +103,4 @@ else:
             else:
                 print('E')
         
+        print(Memoria)
