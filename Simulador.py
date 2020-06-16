@@ -30,12 +30,12 @@ def checkForSpace(Memoria,Tamaño):
         return -1
     else:
         return Dir
-
+#function to move to swaping
 def MoveToSwapping(ProcessQueue,Memoria,Swapping,TablaDeProcesos,ProcessInSwapping,Proceso,Tamaño):
     Dir = checkForSpace(Memoria,Tamaño)
     print('Los siguientes procesos pasaran a swapping: ')
     while Dir == -1:
-        PNum =ProcessQueue[0].ProcessNum
+        PNum = ProcessQueue[0].ProcessNum
         FisicalDir = getRealMemory(TablaDeProcesos[PNum],ProcessQueue[0].Dir)
         print('direccion fisica del proceso(' + str(PNum) + '): ' + str(FisicalDir))
         DeleteFromMemory(Memoria,FisicalDir,ProcessQueue[0].Bytes) #borramos los datos de la memoria
@@ -46,7 +46,8 @@ def MoveToSwapping(ProcessQueue,Memoria,Swapping,TablaDeProcesos,ProcessInSwappi
         ProcessQueue.remove(ProcessQueue[0]) #lo removemos de la cola
         Dir = checkForSpace(Memoria,Tamaño)
     ModMemoria(Memoria,Dir,Tamaño,Proceso)
-    return
+    return Dir #regresa la direccion del proceso inicial
+
 #BORRAMOS DE MEMORIA
 def DeleteFromMemory(Memoria,Dir,Tamaño):
     for x in range(Dir,Dir+Tamaño):
@@ -129,10 +130,11 @@ else:
                     else:
                         print('no hay espacio en memoria') #Ejecutar LRU
                         print('utilizando remplazo LRU')
-                        LastPnum = ProcessQueue[0].ProcessNum #guarda el ultimo numero de proceso 
-                        LastObjectP = SearchWithPNum(ProcessQueue,LastPnum) # guarda el objeto del ultimo numero de proceso
-                        #funcion para mover a swapping todos los procesos hasta que exista un espacio
-                        MoveToSwapping(ProcessQueue,Memoria,Swapping,tablaDePagina,ProcessInSwapping,Pnum,bytesP) 
+                        Dir = MoveToSwapping(ProcessQueue,Memoria,Swapping,tablaDePagina,ProcessInSwapping,Pnum,bytesP)
+                        tablaDePagina[Pnum] = Dir/16
+                        Despl = Dir - math.floor(Dir/16)*16
+                        ObjectP = Process(Pnum,bytesP,Despl)
+                        ProcessQueue.append(ObjectP)
                         
             elif state == 'A':
                 print('-----------------A---------------')
