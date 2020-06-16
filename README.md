@@ -1,7 +1,11 @@
 # ProyectoSO
 Proyecto final de Sistemas Operativos
 
-Puedes probar clonando el repositorio; estando en el root de la carpeta ejecutamos Simulador.py pruebas.txt
-o Simulador.py pruebasProfe.txt.
+Se necesita contar con python 3.7 en adelante
 
-Tambien puedes agregar tus archivos.txt.
+Puedes probar clonando el repositorio; estando en el root de la carpeta ejecutamos 
+python Simulador.py pruebas.txt
+python Simulador.py pruebasProfe.txt
+python Simulador.py ArchivoTrabajo-1.txt
+
+Tambien puedes agregar tus archivos.txt
