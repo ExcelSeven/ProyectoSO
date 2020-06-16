@@ -31,10 +31,11 @@ def checkForSpace(Memoria,Tamaño):
     else:
         return Dir
 #function to move to swaping
-def MoveToSwapping(ProcessQueue,Memoria,Swapping,TablaDeProcesos,ProcessInSwapping,Proceso,Tamaño):
+def MoveToSwapping(ProcessQueue,Memoria,Swapping,TablaDeProcesos,ProcessInSwapping,Proceso,Tamaño,FalloDePagina):
     Dir = checkForSpace(Memoria,Tamaño)
     print('Los siguientes procesos pasaran a swapping: ')
     while Dir == -1:
+        FalloDePagina =  FalloDePagina + 1
         PNum = ProcessQueue[0].ProcessNum
         FisicalDir = getRealMemory(TablaDeProcesos[PNum],ProcessQueue[0].Dir)
         print('direccion fisica del proceso(' + str(PNum) + '): ' + str(FisicalDir))
@@ -46,7 +47,7 @@ def MoveToSwapping(ProcessQueue,Memoria,Swapping,TablaDeProcesos,ProcessInSwappi
         ProcessQueue.remove(ProcessQueue[0]) #lo removemos de la cola
         Dir = checkForSpace(Memoria,Tamaño)
     ModMemoria(Memoria,Dir,Tamaño,Proceso)
-    return Dir #regresa la direccion del proceso inicial
+    return Dir,FalloDePagina #regresa la direccion del proceso inicial
 
 #BORRAMOS DE MEMORIA
 def DeleteFromMemory(Memoria,Dir,Tamaño):
@@ -101,6 +102,7 @@ else:
         Swapping = [-1] * 4096 # memoria reservada para swapping
         ProcessQueue = [] # fila de los procesos para saber cual entro primero siguendo FIFO
         tablaDePagina = {} # para guardar los marcos y saber si estan en memoria real o virtual
+        FalloDePagina = 0
         ProcessInSwapping = [] # para guardar los objetos procesos en swapping
         #---------------------iniciamos simulador----------------------------
         for i in range(length): 
@@ -108,7 +110,8 @@ else:
             if state == 'C':
                 print(printComment(lista[i]))
             elif state == 'F':
-                print('F')
+                print('-----------------F---------------')
+                print('Fallos de pagina: ' + str(FalloDePagina))
             elif state == 'P': #----- falta revisar que no exista un proceso igual
                 
                 print('-----------------P---------------')
@@ -130,7 +133,7 @@ else:
                     else:
                         print('no hay espacio en memoria') #Ejecutar LRU
                         print('utilizando remplazo LRU')
-                        Dir = MoveToSwapping(ProcessQueue,Memoria,Swapping,tablaDePagina,ProcessInSwapping,Pnum,bytesP)
+                        Dir,FalloDePagina = MoveToSwapping(ProcessQueue,Memoria,Swapping,tablaDePagina,ProcessInSwapping,Pnum,bytesP,FalloDePagina)
                         tablaDePagina[Pnum] = Dir/16
                         Despl = Dir - math.floor(Dir/16)*16
                         ObjectP = Process(Pnum,bytesP,Despl)
