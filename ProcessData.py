@@ -3,4 +3,3 @@ class Process:
         self.ProcessNum = ProcessNum
         self.Bytes = Bytes
         self.Dir = Dir  #desplazamiento
-        self.InRealMem = True

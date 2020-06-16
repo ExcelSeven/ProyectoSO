@@ -37,7 +37,6 @@ def MoveToSwapping(ProcessQueue,Memoria,Swapping,TablaDeProcesos,ProcessInSwappi
     while Dir == -1:
         PNum =ProcessQueue[0].ProcessNum
         FisicalDir = getRealMemory(TablaDeProcesos[PNum],ProcessQueue[0].Dir)
-
         print('direccion fisica del proceso(' + str(PNum) + '): ' + str(FisicalDir))
         DeleteFromMemory(Memoria,FisicalDir,ProcessQueue[0].Bytes) #borramos los datos de la memoria
         tablaDePagina[PNum] = -1 #significa que esta en swapping y no tiene Marco
@@ -100,8 +99,8 @@ else:
         Memoria = [-1] * 2048 # memoria real
         Swapping = [-1] * 4096 # memoria reservada para swapping
         ProcessQueue = [] # fila de los procesos para saber cual entro primero siguendo FIFO
-        tablaDePagina = {}
-        ProcessInSwapping = []
+        tablaDePagina = {} # para guardar los marcos y saber si estan en memoria real o virtual
+        ProcessInSwapping = [] # para guardar los objetos procesos en swapping
         #---------------------iniciamos simulador----------------------------
         for i in range(length): 
             state = checkFirstValList(lista[i])
