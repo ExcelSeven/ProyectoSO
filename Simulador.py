@@ -8,7 +8,7 @@ from ProcessData import Process
 # revisa si existe un espacio disponible
 # si no existe regresa -1
 # si existe regra sa dirrecion inicial
-def chechForSpace(Memoria,Tamaño):
+def checkForSpace(Memoria,Tamaño):
     Contador = 0
     Dir = -1
     state = True # valor para saber si es la primera direccion
@@ -31,13 +31,25 @@ def chechForSpace(Memoria,Tamaño):
     else:
         return Dir
 
+
+#BORRAMOS DE MEMORIA
+def DeleteFromMemory(Memoria,Dir,Tamaño):
+    for x in range(Dir,Dir+Tamaño):
+        Memoria[x] = -1
+    return
+def getRealMemory(Marco,Despl):
+    return int(math.floor(Marco * 16) + Despl)
 #modifica la memoria para agregar un proceso con un tamaño desde una direccion inicial
 def ModMemoria(Memoria,Dir,Tamaño,process):
     for x in range(Dir,Tamaño+Dir):
         Memoria[x] = process
     return
+def SearchWithPNum(ProcessQueue,Pnum):
+    for i in range(len(ProcessQueue)):
+        if ProcessQueue[i].ProcessNum == Pnum:
+            return ProcessQueue[i]
+    return None
 
-    
 # fucniones auxiliares
 def checkFirstValList(X):
     return X[0]
@@ -81,30 +93,60 @@ else:
             elif state == 'F':
                 print('F')
             elif state == 'P': #----- falta revisar que no exista un proceso igual
+                
+                print('-----------------P---------------')
                 corte = lista[i].split() # separa en substrings
                 Pnum = int(corte[2]) #numero de proceso
                 bytesP = int(corte[1]) #tamaño
-                Dir = chechForSpace(Memoria,bytesP) #dirrecion fisica inicial
+                Dir = checkForSpace(Memoria,bytesP) #dirrecion fisica inicial
+                
                 if Dir != -1:
                     tablaDePagina[Pnum] = Dir / 16 #guarda el marco de pagina 
                     Despl = Dir - math.floor(Dir/16)*16 #sacar el despl
-                    P = Process(Pnum,bytesP,Despl)
+                    P = Process(Pnum,bytesP,Despl) # se guarda objeto Proceso
                     ProcessQueue.append(P) 
-                    
                     ModMemoria(Memoria,Dir,bytesP,Pnum)
-                    print(Dir)
+                    print('direccion fisica del proceso(' + str(Pnum) + '): ' + str(Dir))
                     
                 else:
                     if bytesP > 2048:
                         print('Demasiado grande para caber en memoria')
                     else:
                         print('no hay espacio en memoria') #Ejecutar LRU
+                        
+                        print('utilizando remplazo LRU')
+                        LastPnum = ProcessQueue[0].ProcessNum #guarda el ultimo numero de proceso 
+                        LastObjectP = SearchWithPNum(ProcessQueue,LastPnum) # guarda el objeto del ultimo numero de proceso
+                        #MoveToSwapping(ProcessQueue,Memoria,Swapping,ProcesoA)
+                        print('ultimo proceso en entrar: ' + str(LastPnum))
+                        #sacar procesos de la cola hasta que dir del proceso entrante sea diferente a -1
+
+
+
+                print(Memoria)
+
+                        
                     
             elif state == 'A':
+                print('-----------------A---------------')
                 print('A')
             elif state == 'L':
-                print('L')
+                print('-----------------L---------------')
+                corte = lista[i].split()
+                pnum = int(corte[1])
+                p = SearchWithPNum(ProcessQueue,pnum)
+                if p == None:
+                    print('El proceso no existe en memoria')
+                    continue
+                Tam = p.Bytes #buscar tamaño del 
+                DRF = getRealMemory(tablaDePagina[pnum],p.Dir) #direccion fisica
+                DeleteFromMemory(Memoria,DRF,Tam) # se elimina de memoria real
+                print('T: ' + str(Tam) + 'D: ' + str(DRF))
+                print(Memoria)
+                tablaDePagina.pop(pnum) #se elimina de la tabla de paginas
+                ProcessQueue.remove(p)
+                print('Se elimino el proceso('+str(pnum) + ')')
             else:
                 print('E')
         
-        print(Memoria)
+        
