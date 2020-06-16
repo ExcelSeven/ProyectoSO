@@ -31,7 +31,23 @@ def checkForSpace(Memoria,Tamaño):
     else:
         return Dir
 
+def MoveToSwapping(ProcessQueue,Memoria,Swapping,TablaDeProcesos,ProcessInSwapping,Proceso,Tamaño):
+    Dir = checkForSpace(Memoria,Tamaño)
+    print('Los siguientes procesos pasaran a swapping: ')
+    while Dir == -1:
+        PNum =ProcessQueue[0].ProcessNum
+        FisicalDir = getRealMemory(TablaDeProcesos[PNum],ProcessQueue[0].Dir)
 
+        print('direccion fisica del proceso(' + str(PNum) + '): ' + str(FisicalDir))
+        DeleteFromMemory(Memoria,FisicalDir,ProcessQueue[0].Bytes) #borramos los datos de la memoria
+        tablaDePagina[PNum] = -1 #significa que esta en swapping y no tiene Marco
+        FisicalDir = checkForSpace(Swapping,ProcessQueue[0].Bytes) #nos cambia a swapping
+        ProcessInSwapping.append(ProcessQueue[0]) #hay que guardar el proceso en otro 
+        ModMemoria(Swapping,FisicalDir,ProcessQueue[0].Bytes,PNum)
+        ProcessQueue.remove(ProcessQueue[0]) #lo removemos de la cola
+        Dir = checkForSpace(Memoria,Tamaño)
+    ModMemoria(Memoria,Dir,Tamaño,Proceso)
+    return
 #BORRAMOS DE MEMORIA
 def DeleteFromMemory(Memoria,Dir,Tamaño):
     for x in range(Dir,Dir+Tamaño):
@@ -85,6 +101,7 @@ else:
         Swapping = [-1] * 4096 # memoria reservada para swapping
         ProcessQueue = [] # fila de los procesos para saber cual entro primero siguendo FIFO
         tablaDePagina = {}
+        ProcessInSwapping = []
         #---------------------iniciamos simulador----------------------------
         for i in range(length): 
             state = checkFirstValList(lista[i])
@@ -106,27 +123,18 @@ else:
                     P = Process(Pnum,bytesP,Despl) # se guarda objeto Proceso
                     ProcessQueue.append(P) 
                     ModMemoria(Memoria,Dir,bytesP,Pnum)
-                    print('direccion fisica del proceso(' + str(Pnum) + '): ' + str(Dir))
                     
                 else:
                     if bytesP > 2048:
                         print('Demasiado grande para caber en memoria')
                     else:
                         print('no hay espacio en memoria') #Ejecutar LRU
-                        
                         print('utilizando remplazo LRU')
                         LastPnum = ProcessQueue[0].ProcessNum #guarda el ultimo numero de proceso 
                         LastObjectP = SearchWithPNum(ProcessQueue,LastPnum) # guarda el objeto del ultimo numero de proceso
-                        #MoveToSwapping(ProcessQueue,Memoria,Swapping,ProcesoA)
-                        print('ultimo proceso en entrar: ' + str(LastPnum))
-                        #sacar procesos de la cola hasta que dir del proceso entrante sea diferente a -1
-
-
-
-                print(Memoria)
-
+                        #funcion para mover a swapping todos los procesos hasta que exista un espacio
+                        MoveToSwapping(ProcessQueue,Memoria,Swapping,tablaDePagina,ProcessInSwapping,Pnum,bytesP) 
                         
-                    
             elif state == 'A':
                 print('-----------------A---------------')
                 print('A')
@@ -141,12 +149,11 @@ else:
                 Tam = p.Bytes #buscar tamaño del 
                 DRF = getRealMemory(tablaDePagina[pnum],p.Dir) #direccion fisica
                 DeleteFromMemory(Memoria,DRF,Tam) # se elimina de memoria real
-                print('T: ' + str(Tam) + 'D: ' + str(DRF))
-                print(Memoria)
                 tablaDePagina.pop(pnum) #se elimina de la tabla de paginas
                 ProcessQueue.remove(p)
                 print('Se elimino el proceso('+str(pnum) + ')')
             else:
                 print('E')
+        
         
         
