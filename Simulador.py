@@ -196,6 +196,7 @@ else:
                         z = SearchWithPNum(ProcessInSwapping,Pnum)
                         if z == None:
                             print('no existe el proceso')
+                            continue
                         else:
                             DeleteFromMemory(Swapping,int(z.Dir),z.Bytes)
                             Dir,contSwapping = MoveToSwapping(ProcessQueue,Memoria,Swapping,tablaDePagina,ProcessInSwapping,Pnum,z.Bytes,FalloDePagina,contSwapping)
@@ -204,11 +205,9 @@ else:
                             tablaDePagina[Pnum] = Dir/16
                             Despl = Dir - math.floor(Dir/16)*16
                             z.Dir = Despl
-
-                            
-                
-                Fdir = getRealMemory(tablaDePagina[Pnum],SearchWithPNum(ProcessQueue,Pnum).Dir)
-                print('A - La direccion asignada es (' + str(Fdir) + ')')
+                if tablaDePagina.get(Pnum) != None:
+                    Fdir = getRealMemory(tablaDePagina[Pnum],SearchWithPNum(ProcessQueue,Pnum).Dir)
+                    print('A - La direccion asignada es (' + str(Fdir) + ')')
             elif state == 'L':
                 
                 print('-----------------L---------------')
@@ -229,7 +228,7 @@ else:
                 elif Z != None:
                     Tam = Z.Bytes #buscar tamaño del 
                     DRF = Z.Dir #direccion fisica
-                    DeleteFromMemory(Swapping,DRF,Tam) # se elimina de memoria real
+                    DeleteFromMemory(Swapping,int(DRF),Tam) # se elimina de memoria real
                     tablaDePagina.pop(pnum) #se elimina de la tabla de paginas
                     ProcessInSwapping.remove(Z)
                     print('Se elimino el proceso('+str(pnum) + ')')
